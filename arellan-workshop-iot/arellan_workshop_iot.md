@@ -1,4 +1,4 @@
-.# arellan-workshop-iot — Sensores IoT del Taller
+# arellan-workshop-iot — Sensores IoT del Taller
 
 Módulo de monitoreo ambiental e instrumental del taller mediante sensores IoT. Cubre compresoras de aire, consumo eléctrico, presencia en zonas restringidas y control de apertura del almacén de repuestos.
 
