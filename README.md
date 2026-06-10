@@ -2,7 +2,19 @@
 
 Repositorio macro que agrupa todos los módulos de integración con hardware físico del taller: control biométrico ZKTeco, rastreo GPS de vehículos y sensores IoT del ambiente de trabajo.
 
-## Submódulos
+## Estado de Implementación (FASE 1 + FASE 2 — bridge NestJS)
+
+Bridge NestJS implementado en la raíz del repo (`src/`), puerto **3007**, conectado a `arellan-platform` (puerto 3001) vía secreto compartido `IOT_BRIDGE_SHARED_SECRET` (header `x-device-key`):
+
+| Módulo | Endpoint | Descripción |
+|--------|----------|-------------|
+| `src/zkteco` | `POST /adms/attendance` | `ZktecoDeviceAdapter`: recibe push ADMS (ZKTeco), sanitiza DNI/timestamp, despacha a `arellan-platform` (`ProcessBiometricAttendanceUseCase`). Responde `{GetStamp}`. Guard: whitelist de SN. |
+| `src/onvif` | `POST /iot/cameras/:cameraId/capture` | `OnvifCameraClient`: snapshot ONVIF (RTSP/Snapshot URI), reenvía buffer a `arellan-platform` (`/public/iot/orders/:id/photos/camera-capture`) para hash SHA-256 + vínculo a posición de check-in (Anti-Fraude #8). Guard: secreto compartido. |
+| `src/common/platform-api` | — | Cliente HTTP hacia `arellan-platform` (`PlatformApiClient`). |
+
+`arellan-vehicle-tracking` y `arellan-workshop-iot` (submódulos descritos abajo) permanecen en estado de especificación, sin código aún.
+
+## Submódulos (roadmap)
 
 | Submódulo | Descripción | Fase |
 |-----------|-------------|------|
