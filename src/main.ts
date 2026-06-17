@@ -2,6 +2,7 @@ import { NestFactory } from "@nestjs/core"
 import { ValidationPipe, Logger } from "@nestjs/common"
 import { ConfigService } from "@nestjs/config"
 import helmet from "helmet"
+import type { Request, Response } from "express"
 import { AppModule } from "./app.module"
 
 async function bootstrap() {
@@ -20,6 +21,14 @@ async function bootstrap() {
       transformOptions: { enableImplicitConversion: true },
     }),
   )
+
+  // Raiz con respuesta limpia para proxies y monitores (evita 404 "Cannot GET /")
+  app
+    .getHttpAdapter()
+    .getInstance()
+    .get("/", (_req: Request, res: Response) =>
+      res.json({ status: "online", service: "arellan-iot-bridge", timestamp: new Date().toISOString() }),
+    )
 
   const port = config.get<number>("PORT", 3007)
   await app.listen(port)
